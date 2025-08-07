@@ -1,0 +1,39 @@
+### Testa a raiz
+GET http://localhost:3001/api/players
+
+###
+
+### Cria um novo players
+POST http://localhost:3001/api/players
+Content-Type: application/json
+
+{
+    "name": "cachorro quente",
+    "image": "https://i.pinimg.com/736x/6b/50/57/6b50573798c112992dea88fde440784a.jpg"
+}
+
+###
+
+### Lista todos os playerss
+GET http://localhost:3001/api/players
+
+###
+
+### Busca um players específico (troque o ID conforme necessário)
+GET http://localhost:3001/api/players/1
+
+###
+
+### Atualiza um players
+PUT http://localhost:3001/api/players/1
+Content-Type: application/json
+
+{
+    "name": "cachorro quente oioio",
+    "image": "https://i.pinimg.com/736x/6b/50/57/6b50573798c112992dea88fde440784a.jpg"
+}
+
+###
+
+### Remove um players
+DELETE http://localhost:3001/api/players

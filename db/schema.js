@@ -1,4 +1,10 @@
-const { pgTable, serial, text, varchar, timestamp } = require("drizzle-orm/pg-core");
+const {
+  pgTable,
+  serial,
+  text,
+  varchar,
+  timestamp,
+} = require("drizzle-orm/pg-core");
 const { relations } = require("drizzle-orm");
 
 const teams = pgTable("teams", {
@@ -17,6 +23,14 @@ const players = pgTable("players", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Nova tabela para usuários
+const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 256 }),
+  email: varchar("email", { length: 256 }).notNull().unique(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 const teamsRelations = relations(teams, ({ many }) => ({
   players: many(players),
 }));
@@ -31,6 +45,7 @@ const playersRelations = relations(players, ({ one }) => ({
 module.exports = {
   teams,
   players,
+  users, // Adicione a nova tabela ao export
   teamsRelations,
   playersRelations,
 };
