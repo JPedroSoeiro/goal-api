@@ -23,11 +23,11 @@ const players = pgTable("players", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-// Nova tabela para usuários
 const users = pgTable("users", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }),
   email: varchar("email", { length: 256 }).notNull().unique(),
+  password: text("password").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

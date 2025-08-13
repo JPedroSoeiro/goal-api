@@ -5,6 +5,7 @@ const playersController = require("../controllers/playersController.js");
 
 router.get("/", playersController.getAllPlayers);
 router.post("/", playersController.createPlayer);
-router.delete("/:id", playersController.deletePlayer); // Rota dinâmica para DELETE
+router.put("/:id", playersController.updatePlayer);
+router.delete("/:id", playersController.deletePlayer);
 
 module.exports = router;

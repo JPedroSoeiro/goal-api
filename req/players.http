@@ -9,6 +9,8 @@ Content-Type: application/json
 
 {
     "name": "cachorro quente",
+    "teamId": 1,
+    "position": "meia",
     "image": "https://i.pinimg.com/736x/6b/50/57/6b50573798c112992dea88fde440784a.jpg"
 }
 
@@ -24,16 +26,18 @@ GET http://localhost:3001/api/players/1
 
 ###
 
-### Atualiza um players
-PUT http://localhost:3001/api/players/1
+### Atualiza um players (troque o ID conforme necessário)
+PUT http://localhost:3001/api/players/1 
 Content-Type: application/json
 
 {
-    "name": "cachorro quente oioio",
-    "image": "https://i.pinimg.com/736x/6b/50/57/6b50573798c112992dea88fde440784a.jpg"
+    "name": "jogador atualizado",
+    "teamId": 1,
+    "position": "meio-campo",
+    "image": "https://example.com/updated_player.jpg"
 }
 
 ###
 
-### Remove um players
-DELETE http://localhost:3001/api/players
+### Remove um players (troque o ID conforme necessário)
+DELETE http://localhost:3001/api/players/1

@@ -1,0 +1,39 @@
+### Testa a raiz
+GET http://localhost:3001/api/teams
+
+###
+
+### Cria um novo usuário
+POST http://localhost:3001/api/teams
+Content-Type: application/json
+
+{
+    "name": "cachorro quente",
+    "image": "https://i.pinimg.com/736x/6b/50/57/6b50573798c112992dea88fde440784a.jpg"
+}
+
+###
+
+### Lista todos os usuários
+GET http://localhost:3001/api/teams
+
+###
+
+### Busca um usuário específico (troque o ID conforme necessário)
+GET http://localhost:3001/api/teams/1
+
+###
+
+### Atualiza um usuário
+PUT http://localhost:3001/api/teams/1
+Content-Type: application/json
+
+{
+    "name": "cachorro quente oioio",
+    "image": "https://i.pinimg.com/736x/6b/50/57/6b50573798c112992dea88fde440784a.jpg"
+}
+
+###
+
+### Remove um usuário
+DELETE http://localhost:3001/api/teams

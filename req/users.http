@@ -1,0 +1,41 @@
+### Testa a raiz
+GET http://localhost:3001/api/users
+
+###
+
+### Cria um novo usuário
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "name": "João Silva",
+    "email": "joao.silva@example.com",
+    "password": "senhaSegura123" 
+}
+
+###
+
+### Lista todos os usuários
+GET http://localhost:3001/api/users
+
+###
+
+### Busca um usuário específico (troque o ID conforme necessário)
+GET http://localhost:3001/api/users/1
+
+###
+
+### Atualiza um usuário (troque o ID conforme necessário)
+PUT http://localhost:3001/api/users/5
+Content-Type: application/json
+
+{
+    "name": "João Silva Atualizado",
+    "email": "joao.atualizado@example.com"
+    // Não inclua a senha aqui, a menos que você tenha uma rota específica para atualização de senha
+}
+
+###
+
+### Remove um usuário (troque o ID conforme necessário)
+DELETE http://localhost:3001/api/users/1
