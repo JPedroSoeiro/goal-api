@@ -2,6 +2,8 @@
 const { sign } = require("jsonwebtoken");
 const bcrypt = require("bcrypt"); // Importe a biblioteca bcrypt
 const userModel = require("../models/userModel.js"); // Importe o seu userModel
+const jwt = require("jsonwebtoken");
+const { verify } = jwt; // adiciona isso
 
 // Lógica de login de usuário usando a tabela 'users' própria
 async function loginUser(req, res) {
@@ -47,7 +49,6 @@ async function loginUser(req, res) {
   }
 }
 
-// Nova função para validar o token
 // Nova função para validar o token
 async function validateToken(req, res) {
   try {
