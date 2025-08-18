@@ -57,6 +57,85 @@ const authenticateToken = require("../middleware/authMiddleware.js");
  */
 router.get("/", authenticateToken, teamsController.getAllTeams);
 
+
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Player:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           example: "1"
+ *         name:
+ *           type: string
+ *           example: "Lionel Messi"
+ *         position:
+ *           type: string
+ *           example: "Forward"
+ *         image:
+ *           type: string
+ *           example: "https://meuservidor.com/messi.png"
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2025-08-18T12:00:00.000Z"
+ * 
+ *     TeamWithPlayers:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           example: "123"
+ *         name:
+ *           type: string
+ *           example: "Barcelona"
+ *         image:
+ *           type: string
+ *           example: "https://meuservidor.com/barcelona.png"
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2025-08-18T12:00:00.000Z"
+ *         players:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Player'
+ */
+
+/**
+ * @swagger
+ * /teams/{id}:
+ *   get:
+ *     summary: Retorna um time específico com todos os jogadores
+ *     tags: [Teams]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do time
+ *     responses:
+ *       200:
+ *         description: Time encontrado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TeamWithPlayers'
+ *       400:
+ *         description: ID do time não fornecido
+ *       401:
+ *         description: Token inválido ou não fornecido
+ *       404:
+ *         description: Time não encontrado
+ */
+router.get("/:id", authenticateToken, teamsController.getTeamById);
+
 /**
  * @swagger
  * /teams:

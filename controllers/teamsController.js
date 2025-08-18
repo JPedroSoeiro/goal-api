@@ -11,6 +11,22 @@ async function getAllTeams(req, res) {
   }
 }
 
+async function getTeamById(req, res) {
+  try {
+    const { id } = req.params;
+
+    if (!id) return res.status(400).json({ error: "ID do time é obrigatório" });
+
+    const team = await teamModel.findTeamByIdWithPlayers(id);
+
+    if (!team) return res.status(404).json({ error: "Time não encontrado" });
+
+    return res.status(200).json(team);
+  } catch (error) {
+    console.error("Erro ao buscar time:", error);
+    return res.status(500).json({ error: "Erro interno do servidor" });
+  }
+}
 // Cria um novo time
 async function createTeam(req, res) {
   try {
@@ -79,6 +95,7 @@ async function deleteTeam(req, res) {
 
 module.exports = {
   getAllTeams,
+  getTeamById,
   createTeam,
   updateTeam,
   deleteTeam,
