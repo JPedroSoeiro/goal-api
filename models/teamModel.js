@@ -7,30 +7,42 @@ async function findAllTeams() {
 }
 
 async function findTeamByIdWithPlayers(id) {
-  // Buscar o time pelo id
-  const team = await db.select().from(teams).where(eq(teams.id, Number(id)));
+  const rows = await db
+    .select({
+      teamId: teams.id,
+      teamName: teams.name,
+      teamImage: teams.image,
+      teamCreatedAt: teams.createdAt,
+      playerId: players.id,
+      playerName: players.name,
+      playerPosition: players.position,
+      playerImage: players.image,
+      playerCreatedAt: players.createdAt,
+    })
+    .from(teams)
+    .leftJoin(players, eq(players.teamId, teams.id))
+    .where(eq(teams.id, id));
 
-  if (!team || team.length === 0) return null;
+  if (rows.length === 0) return null;
 
-  // Buscar todos os players desse time
-  const teamPlayers = await db
-    .select()
-    .from(players)
-    .where(eq(players.teamId, Number(id)));
-
-  return {
-    id: team[0].id,
-    name: team[0].name,
-    image: team[0].image,
-    createdAt: team[0].createdAt,
-    players: teamPlayers.map((p) => ({
-      id: p.id,
-      name: p.name,
-      position: p.position,
-      image: p.image,
-      createdAt: p.createdAt,
-    })),
+  // Agrupa os jogadores
+  const team = {
+    id: rows[0].teamId,
+    name: rows[0].teamName,
+    image: rows[0].teamImage,
+    createdAt: rows[0].teamCreatedAt,
+    players: rows
+      .filter((r) => r.playerId) // pode ter time sem jogadores
+      .map((r) => ({
+        id: r.playerId,
+        name: r.playerName,
+        position: r.playerPosition,
+        image: r.playerImage,
+        createdAt: r.playerCreatedAt,
+      })),
   };
+
+  return team;
 }
 
 async function createNewTeam(teamData) {
