@@ -25,6 +25,10 @@ const authenticateToken = require("../middleware/authMiddleware.js");
  *         name:
  *           type: string
  *           description: Nome da equipe
+ *         image:
+ *           type: string
+ *           description: URL da imagem do time
+ *           example: "https://meuservidor.com/barcelona.png"
  *         createdAt:
  *           type: string
  *           format: date-time
@@ -32,6 +36,7 @@ const authenticateToken = require("../middleware/authMiddleware.js");
  *       example:
  *         id: "123"
  *         name: "Equipe de Desenvolvimento"
+ *         image: "https://meuservidor.com/devteam.png"
  *         createdAt: "2025-08-18T12:00:00.000Z"
  */
 
@@ -56,54 +61,6 @@ const authenticateToken = require("../middleware/authMiddleware.js");
  *         description: Token inválido ou não fornecido
  */
 router.get("/", authenticateToken, teamsController.getAllTeams);
-
-
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Player:
- *       type: object
- *       properties:
- *         id:
- *           type: string
- *           example: "1"
- *         name:
- *           type: string
- *           example: "Lionel Messi"
- *         position:
- *           type: string
- *           example: "Forward"
- *         image:
- *           type: string
- *           example: "https://meuservidor.com/messi.png"
- *         createdAt:
- *           type: string
- *           format: date-time
- *           example: "2025-08-18T12:00:00.000Z"
- * 
- *     TeamWithPlayers:
- *       type: object
- *       properties:
- *         id:
- *           type: string
- *           example: "123"
- *         name:
- *           type: string
- *           example: "Barcelona"
- *         image:
- *           type: string
- *           example: "https://meuservidor.com/barcelona.png"
- *         createdAt:
- *           type: string
- *           format: date-time
- *           example: "2025-08-18T12:00:00.000Z"
- *         players:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/Player'
- */
 
 /**
  * @swagger
@@ -149,7 +106,14 @@ router.get("/:id", authenticateToken, teamsController.getTeamById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Team'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Barcelona"
+ *               image:
+ *                 type: string
+ *                 example: "https://meuservidor.com/barcelona.png"
  *     responses:
  *       201:
  *         description: Equipe criada com sucesso
@@ -184,14 +148,27 @@ router.post("/", authenticateToken, teamsController.createTeam);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Team'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Barcelona Atualizado"
+ *               image:
+ *                 type: string
+ *                 example: "https://meuservidor.com/barcelona-novo.png"
  *     responses:
  *       200:
  *         description: Equipe atualizada com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Team'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Time atualizado com sucesso"
+ *                 team:
+ *                   $ref: '#/components/schemas/Team'
  *       400:
  *         description: Dados inválidos
  *       401:
