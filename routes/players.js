@@ -34,15 +34,15 @@ const authenticateToken = require("../middleware/authMiddleware.js");
  *                   name:
  *                     type: string
  *                     example: Lionel Messi
- *                   team_id_position:
+ *                   teamId:
  *                     type: integer
  *                     example: 3
+ *                   position:
+ *                     type: string
+ *                     example: Forward
  *                   image:
  *                     type: string
  *                     example: https://meuservidor.com/images/messi.png
- *                   team:
- *                     type: string
- *                     example: Inter Miami
  *       401:
  *         description: Não autorizado (token inválido ou ausente)
  */
@@ -64,22 +64,20 @@ router.get("/", authenticateToken, playersController.getAllPlayers);
  *             type: object
  *             required:
  *               - name
- *               - team_id_position
- *               - image
- *               - team
+ *               - teamId
  *             properties:
  *               name:
  *                 type: string
  *                 example: Cristiano Ronaldo
- *               team_id_position:
+ *               teamId:
  *                 type: integer
  *                 example: 5
+ *               position:
+ *                 type: string
+ *                 example: Forward
  *               image:
  *                 type: string
  *                 example: https://meuservidor.com/images/ronaldo.png
- *               team:
- *                 type: string
- *                 example: Al Nassr
  *     responses:
  *       201:
  *         description: Jogador criado com sucesso
@@ -94,15 +92,15 @@ router.get("/", authenticateToken, playersController.getAllPlayers);
  *                 name:
  *                   type: string
  *                   example: Cristiano Ronaldo
- *                 team_id_position:
+ *                 teamId:
  *                   type: integer
  *                   example: 5
+ *                 position:
+ *                   type: string
+ *                   example: Forward
  *                 image:
  *                   type: string
  *                   example: https://meuservidor.com/images/ronaldo.png
- *                 team:
- *                   type: string
- *                   example: Al Nassr
  *       400:
  *         description: Dados inválidos
  */
@@ -133,15 +131,15 @@ router.post("/", authenticateToken, playersController.createPlayer);
  *               name:
  *                 type: string
  *                 example: Neymar Jr
- *               team_id_position:
+ *               teamId:
  *                 type: integer
  *                 example: 7
+ *               position:
+ *                 type: string
+ *                 example: Attacking Midfielder
  *               image:
  *                 type: string
  *                 example: https://meuservidor.com/images/neymar.png
- *               team:
- *                 type: string
- *                 example: Al Hilal
  *     responses:
  *       200:
  *         description: Jogador atualizado com sucesso
@@ -150,21 +148,27 @@ router.post("/", authenticateToken, playersController.createPlayer);
  *             schema:
  *               type: object
  *               properties:
- *                 id:
- *                   type: integer
- *                   example: 12
- *                 name:
+ *                 message:
  *                   type: string
- *                   example: Neymar Jr
- *                 team_id_position:
- *                   type: integer
- *                   example: 7
- *                 image:
- *                   type: string
- *                   example: https://meuservidor.com/images/neymar.png
- *                 team:
- *                   type: string
- *                   example: Al Hilal
+ *                   example: "Jogador atualizado com sucesso"
+ *                 player:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 12
+ *                     name:
+ *                       type: string
+ *                       example: Neymar Jr
+ *                     teamId:
+ *                       type: integer
+ *                       example: 7
+ *                     position:
+ *                       type: string
+ *                       example: Attacking Midfielder
+ *                     image:
+ *                       type: string
+ *                       example: https://meuservidor.com/images/neymar.png
  *       404:
  *         description: Jogador não encontrado
  */
@@ -188,6 +192,32 @@ router.put("/:id", authenticateToken, playersController.updatePlayer);
  *     responses:
  *       200:
  *         description: Jogador deletado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Jogador excluído com sucesso"
+ *                 player:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 15
+ *                     name:
+ *                       type: string
+ *                       example: Kaká
+ *                     teamId:
+ *                       type: integer
+ *                       example: 9
+ *                     position:
+ *                       type: string
+ *                       example: Midfielder
+ *                     image:
+ *                       type: string
+ *                       example: https://meuservidor.com/images/kaka.png
  *       404:
  *         description: Jogador não encontrado
  */
