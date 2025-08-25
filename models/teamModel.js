@@ -58,6 +58,11 @@ async function updateExistingTeam(id, teamData) {
 }
 
 async function deleteExistingTeam(id) {
+  await db
+    .update(players)
+    .set({ teamId: null })
+    .where(eq(players.teamId, Number(id)));
+
   return await db
     .delete(teams)
     .where(eq(teams.id, Number(id)))

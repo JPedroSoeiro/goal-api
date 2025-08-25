@@ -15,6 +15,20 @@
       "when": 1754509967480,
       "tag": "0001_curious_jazinda",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1756141314950,
+      "tag": "0002_wealthy_unus",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1756142797831,
+      "tag": "0003_fair_swordsman",
+      "breakpoints": true
     }
   ]
 }

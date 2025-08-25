@@ -1,6 +1,7 @@
 const {
   pgTable,
   serial,
+  integer, // Usando integer ao invés de serial
   text,
   varchar,
   timestamp,
@@ -17,7 +18,9 @@ const teams = pgTable("teams", {
 const players = pgTable("players", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
-  teamId: serial("team_id").references(() => teams.id),
+  // Usando integer para a chave estrangeira e configurando o onDelete
+  teamId: integer("team_id")
+    .references(() => teams.id, { onDelete: 'SET NULL' }),
   position: varchar("position", { length: 256 }),
   image: text("image"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -45,7 +48,7 @@ const playersRelations = relations(players, ({ one }) => ({
 module.exports = {
   teams,
   players,
-  users, // Adicione a nova tabela ao export
+  users, // Adiciona a nova tabela ao export
   teamsRelations,
   playersRelations,
 };

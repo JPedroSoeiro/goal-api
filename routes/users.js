@@ -51,8 +51,6 @@ router.get("/", authenticateToken, usersController.getAllUsers);
  *   post:
  *     summary: Cria um novo usuário
  *     tags: [Users]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -96,7 +94,7 @@ router.get("/", authenticateToken, usersController.getAllUsers);
  *       400:
  *         description: Dados inválidos
  */
-router.post("/", authenticateToken, usersController.createUser);
+router.post("/", usersController.createUser); // Sem a necessidade de token aqui
 
 /**
  * @swagger
