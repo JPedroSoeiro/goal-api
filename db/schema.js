@@ -19,8 +19,9 @@ const players = pgTable("players", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   // Usando integer para a chave estrangeira e configurando o onDelete
-  teamId: integer("team_id")
-    .references(() => teams.id, { onDelete: 'SET NULL' }),
+  teamId: integer("team_id").references(() => teams.id, {
+    onDelete: "SET NULL",
+  }),
   position: varchar("position", { length: 256 }),
   image: text("image"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
