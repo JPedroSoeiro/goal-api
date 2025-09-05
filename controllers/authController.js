@@ -1,9 +1,6 @@
-// controllers/authController.js
-const { sign } = require("jsonwebtoken");
-const bcrypt = require("bcrypt"); // Importe a biblioteca bcrypt
-const userModel = require("../models/userModel.js"); // Importe o seu userModel
-const jwt = require("jsonwebtoken");
-const { verify } = jwt; // adiciona isso
+const { sign, verify } = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const userModel = require("../models/userModel.js");
 
 // Lógica de login de usuário usando a tabela 'users' própria
 async function loginUser(req, res) {
@@ -14,16 +11,14 @@ async function loginUser(req, res) {
       return res.status(400).json({ error: "Email e senha são obrigatórios." });
     }
 
-    // 1. Buscar o usuário pelo email no seu banco de dados
     const usersFound = await userModel.findUserByEmail(email);
-    const user = usersFound[0]; // O Drizzle retorna um array, pegue o primeiro
+    const user = usersFound[0];
 
     if (!user) {
       console.error("Usuário não encontrado para o email:", email);
       return res.status(401).json({ error: "Credenciais inválidas." });
     }
 
-    // 2. Comparar a senha fornecida com a senha hasheada no banco de dados
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
@@ -31,16 +26,20 @@ async function loginUser(req, res) {
       return res.status(401).json({ error: "Credenciais inválidas." });
     }
 
-    // Cria um token JWT para a sessão
     const token = sign(
-      { id: user.id, email: user.email, name: user.name }, // Inclua 'name' se quiser na sessão
-      process.env.JWT_SECRET || "your-secret-key", // Use uma chave secreta forte do .env
+      { id: user.id, email: user.email, name: user.name, teamId: user.teamId },
+      process.env.JWT_SECRET || "your-secret-key",
       { expiresIn: "1h" }
     );
 
     return res.status(200).json({
       message: "Login bem-sucedido!",
-      user: { id: user.id, email: user.email, name: user.name },
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        teamId: user.teamId,
+      },
       token,
     });
   } catch (error) {
@@ -49,10 +48,9 @@ async function loginUser(req, res) {
   }
 }
 
-// Nova função para validar o token
 async function validateToken(req, res) {
   try {
-    const { token } = req.body; // Assume que o token é enviado no corpo da requisição
+    const { token } = req.body;
 
     if (!token) {
       return res
@@ -60,8 +58,6 @@ async function validateToken(req, res) {
         .json({ isValid: false, error: "Token não fornecido." });
     }
 
-    // Verifica o token usando o mesmo segredo usado para assiná-lo
-    // A função 'verify' é importada do 'jsonwebtoken'
     verify(
       token,
       process.env.JWT_SECRET || "your-secret-key",
@@ -72,7 +68,6 @@ async function validateToken(req, res) {
             .status(200)
             .json({ isValid: false, error: "Token inválido ou expirado." });
         }
-        // Se o token for válido, 'decoded' conterá o payload
         return res.status(200).json({ isValid: true, user: decoded });
       }
     );
