@@ -11,6 +11,7 @@ const teams = pgTable("teams", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull().unique(),
   image: text("image"),
+  ligaId: serial("liga_id").references(() => ligas.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -38,8 +39,12 @@ const ligas = pgTable("ligas", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-const teamsRelations = relations(teams, ({ many }) => ({
+const teamsRelations = relations(teams, ({ many, one }) => ({
   players: many(players),
+  liga: one(ligas, {
+    fields: [teams.ligaId],
+    references: [ligas.id],
+  }),
 }));
 
 const playersRelations = relations(players, ({ one }) => ({
@@ -49,6 +54,10 @@ const playersRelations = relations(players, ({ one }) => ({
   }),
 }));
 
+const ligasRelations = relations(ligas, ({ many }) => ({
+  teams: many(teams),
+}));
+
 module.exports = {
   teams,
   players,
@@ -56,4 +65,5 @@ module.exports = {
   ligas,
   teamsRelations,
   playersRelations,
+  ligasRelations,
 };
