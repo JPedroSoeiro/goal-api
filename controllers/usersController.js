@@ -42,17 +42,22 @@ async function createUser(req, res) {
   }
 }
 
-// Atualiza um usuário existente
 async function updateUser(req, res) {
   try {
     const id = req.params.id;
+    // Capture o teamId do corpo da requisição
     const { name, email, password, teamId } = req.body;
 
     if (!id) {
       return res.status(400).json({ error: "ID do usuário é obrigatório" });
     }
 
-    let updateData = { name, email, teamId };
+    // Crie um objeto para os dados de atualização
+    let updateData = {};
+    if (name) updateData.name = name;
+    if (email) updateData.email = email;
+    if (teamId) updateData.teamId = teamId; // Adicione o teamId se ele existir
+
     if (password) {
       updateData.password = await bcrypt.hash(password, 10);
     }
@@ -68,9 +73,6 @@ async function updateUser(req, res) {
       user: updatedUser[0],
     });
   } catch (error) {
-    if (error.code === "23505") {
-      return res.status(409).json({ error: "Este e-mail já está em uso." });
-    }
     console.error("Erro ao atualizar usuário:", error);
     return res.status(500).json({ error: "Erro interno do servidor" });
   }

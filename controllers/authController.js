@@ -1,9 +1,8 @@
-// goal-api/controllers/authController.js
-const { sign, verify } = require("jsonwebtoken"); // Adicionado 'verify'
+// controllers/authController.js
+const { sign, verify } = require("jsonwebtoken"); // Adicionado 'verify' que estava faltando
 const bcrypt = require("bcrypt");
 const userModel = require("../models/userModel.js");
 
-// Lógica de login de usuário usando a tabela 'users' própria
 async function loginUser(req, res) {
   try {
     const { email, password } = req.body;
@@ -12,16 +11,14 @@ async function loginUser(req, res) {
       return res.status(400).json({ error: "Email e senha são obrigatórios." });
     }
 
-    // 1. Buscar o usuário pelo email no seu banco de dados
     const usersFound = await userModel.findUserByEmail(email);
-    const user = usersFound[0]; // O Drizzle retorna um array, pegue o primeiro
+    const user = usersFound[0];
 
     if (!user) {
       console.error("Usuário não encontrado para o email:", email);
       return res.status(401).json({ error: "Credenciais inválidas." });
     }
 
-    // 2. Comparar a senha fornecida com a senha hasheada no banco de dados
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
@@ -29,24 +26,22 @@ async function loginUser(req, res) {
       return res.status(401).json({ error: "Credenciais inválidas." });
     }
 
-    // Cria o payload incluindo o teamId
-    const payload = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      teamId: user.teamId,
-    };
-
-    // Cria um token JWT para a sessão
     const token = sign(
-      payload,
-      process.env.JWT_SECRET || "your-secret-key", // Use uma chave secreta forte do .env
+      // CORREÇÃO: Adicionado 'teamId' ao payload do token JWT
+      { id: user.id, email: user.email, name: user.name, teamId: user.teamId },
+      process.env.JWT_SECRET || "your-secret-key",
       { expiresIn: "1h" }
     );
 
     return res.status(200).json({
       message: "Login bem-sucedido!",
-      user: payload,
+      // CORREÇÃO: Adicionado 'teamId' ao objeto do usuário na resposta
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        teamId: user.teamId,
+      },
       token,
     });
   } catch (error) {
@@ -55,7 +50,6 @@ async function loginUser(req, res) {
   }
 }
 
-// Nova função para validar o token
 async function validateToken(req, res) {
   try {
     const { token } = req.body;

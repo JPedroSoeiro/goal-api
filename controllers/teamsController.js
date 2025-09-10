@@ -11,6 +11,7 @@ async function getAllTeams(req, res) {
   }
 }
 
+// CORREÇÃO: Esta é a função que busca um time por ID com seus jogadores
 async function getTeamById(req, res) {
   try {
     const { id } = req.params;
@@ -27,20 +28,23 @@ async function getTeamById(req, res) {
     return res.status(500).json({ error: "Erro interno do servidor" });
   }
 }
+
 // Cria um novo time
 async function createTeam(req, res) {
   try {
-    const { name, image } = req.body;
+    const { name, image, ligaId } = req.body;
 
     if (!name) {
       return res.status(400).json({ error: "O nome do time é obrigatório" });
     }
 
-    const newTeam = await teamModel.createNewTeam({ name, image }); // Usa a função do modelo
+    const newTeam = await teamModel.createNewTeam({ name, image, ligaId });
     return res.status(201).json(newTeam[0]);
   } catch (error) {
     console.error("Erro ao criar time:", error);
-    return res.status(500).json({ error: "Erro interno do servidor" });
+    return res
+      .status(500)
+      .json({ error: "Erro interno do servidor", details: error.message });
   }
 }
 
@@ -48,13 +52,17 @@ async function createTeam(req, res) {
 async function updateTeam(req, res) {
   try {
     const id = req.params.id;
-    const { name, image } = req.body;
+    const { name, image, ligaId } = req.body;
 
     if (!id) {
       return res.status(400).json({ error: "ID do time é obrigatório" });
     }
 
-    const updatedTeam = await teamModel.updateExistingTeam(id, { name, image }); // Usa a função do modelo
+    const updatedTeam = await teamModel.updateExistingTeam(id, {
+      name,
+      image,
+      ligaId,
+    });
 
     if (updatedTeam.length === 0) {
       return res.status(404).json({ error: "Time não encontrado" });
@@ -78,7 +86,7 @@ async function deleteTeam(req, res) {
       return res.status(400).json({ error: "ID do time é obrigatório" });
     }
 
-    const deletedTeam = await teamModel.deleteExistingTeam(id); // Usa a função do modelo
+    const deletedTeam = await teamModel.deleteExistingTeam(id);
 
     if (deletedTeam.length === 0) {
       return res.status(404).json({ error: "Time não encontrado" });
@@ -93,9 +101,10 @@ async function deleteTeam(req, res) {
   }
 }
 
+// CORREÇÃO: Exporte as funções que realmente existem
 module.exports = {
   getAllTeams,
-  getTeamById,
+  getTeamById, // Exportando a função correta
   createTeam,
   updateTeam,
   deleteTeam,
