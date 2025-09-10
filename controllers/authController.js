@@ -1,4 +1,5 @@
-const { sign, verify } = require("jsonwebtoken");
+// goal-api/controllers/authController.js
+const { sign, verify } = require("jsonwebtoken"); // Adicionado 'verify'
 const bcrypt = require("bcrypt");
 const userModel = require("../models/userModel.js");
 
@@ -11,14 +12,16 @@ async function loginUser(req, res) {
       return res.status(400).json({ error: "Email e senha são obrigatórios." });
     }
 
+    // 1. Buscar o usuário pelo email no seu banco de dados
     const usersFound = await userModel.findUserByEmail(email);
-    const user = usersFound[0];
+    const user = usersFound[0]; // O Drizzle retorna um array, pegue o primeiro
 
     if (!user) {
       console.error("Usuário não encontrado para o email:", email);
       return res.status(401).json({ error: "Credenciais inválidas." });
     }
 
+    // 2. Comparar a senha fornecida com a senha hasheada no banco de dados
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
@@ -26,20 +29,24 @@ async function loginUser(req, res) {
       return res.status(401).json({ error: "Credenciais inválidas." });
     }
 
+    // Cria o payload incluindo o teamId
+    const payload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      teamId: user.teamId,
+    };
+
+    // Cria um token JWT para a sessão
     const token = sign(
-      { id: user.id, email: user.email, name: user.name, teamId: user.teamId },
-      process.env.JWT_SECRET || "your-secret-key",
+      payload,
+      process.env.JWT_SECRET || "your-secret-key", // Use uma chave secreta forte do .env
       { expiresIn: "1h" }
     );
 
     return res.status(200).json({
       message: "Login bem-sucedido!",
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        teamId: user.teamId,
-      },
+      user: payload,
       token,
     });
   } catch (error) {
@@ -48,6 +55,7 @@ async function loginUser(req, res) {
   }
 }
 
+// Nova função para validar o token
 async function validateToken(req, res) {
   try {
     const { token } = req.body;

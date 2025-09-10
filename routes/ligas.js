@@ -1,3 +1,4 @@
+// goal-api/routes/ligas.js
 const express = require("express");
 const router = express.Router();
 const ligasController = require("../controllers/ligasController.js");

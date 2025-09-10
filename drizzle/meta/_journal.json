@@ -29,6 +29,20 @@
       "when": 1756142797831,
       "tag": "0003_fair_swordsman",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1757359958220,
+      "tag": "0004_perfect_spot",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1757360582181,
+      "tag": "0005_real_chat",
+      "breakpoints": true
     }
   ]
 }

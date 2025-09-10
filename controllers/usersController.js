@@ -1,10 +1,10 @@
-const userModel = require("../models/userModel.js"); // Importa o novo modelo de usuário
+const userModel = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
 
 // Retorna todos os usuários
 async function getAllUsers(req, res) {
   try {
-    const allUsers = await userModel.findAllUsers(); // Usa a função do modelo
+    const allUsers = await userModel.findAllUsers();
     return res.status(200).json(allUsers);
   } catch (error) {
     console.error("Erro ao buscar usuários:", error);
@@ -14,7 +14,6 @@ async function getAllUsers(req, res) {
 
 // Cria um novo usuário
 async function createUser(req, res) {
-  console.log("Received body:", req.body);
   try {
     const { name, email, password } = req.body;
 
@@ -30,9 +29,14 @@ async function createUser(req, res) {
       name,
       email,
       password: hashedPassword,
-    }); // Usa a função do modelo
+    });
     return res.status(201).json(newUser[0]);
   } catch (error) {
+    // LÓGICA DE ERRO MELHORADA
+    if (error.code === "23505") {
+      // Código de erro do PostgreSQL para violação de unicidade
+      return res.status(409).json({ error: "Este e-mail já está em uso." });
+    }
     console.error("Erro ao criar usuário:", error);
     return res.status(500).json({ error: "Erro interno do servidor" });
   }
@@ -42,18 +46,18 @@ async function createUser(req, res) {
 async function updateUser(req, res) {
   try {
     const id = req.params.id;
-    const { name, email, password } = req.body;
+    const { name, email, password, teamId } = req.body;
 
     if (!id) {
       return res.status(400).json({ error: "ID do usuário é obrigatório" });
     }
 
-    let updateData = { name, email };
+    let updateData = { name, email, teamId };
     if (password) {
       updateData.password = await bcrypt.hash(password, 10);
     }
 
-    const updatedUser = await userModel.updateExistingUser(id, updateData); // Usa a função do modelo
+    const updatedUser = await userModel.updateExistingUser(id, updateData);
 
     if (updatedUser.length === 0) {
       return res.status(404).json({ error: "Usuário não encontrado" });
@@ -64,6 +68,9 @@ async function updateUser(req, res) {
       user: updatedUser[0],
     });
   } catch (error) {
+    if (error.code === "23505") {
+      return res.status(409).json({ error: "Este e-mail já está em uso." });
+    }
     console.error("Erro ao atualizar usuário:", error);
     return res.status(500).json({ error: "Erro interno do servidor" });
   }
@@ -78,7 +85,7 @@ async function deleteUser(req, res) {
       return res.status(400).json({ error: "ID do usuário é obrigatório" });
     }
 
-    const deletedUser = await userModel.deleteExistingUser(id); // Usa a função do modelo
+    const deletedUser = await userModel.deleteExistingUser(id);
 
     if (deletedUser.length === 0) {
       return res.status(404).json({ error: "Usuário não encontrado" });

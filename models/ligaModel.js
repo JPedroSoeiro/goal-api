@@ -1,3 +1,4 @@
+// goal-api/models/ligaModel.js
 const { db } = require("../db/index.js");
 const { ligas } = require("../db/schema.js");
 const { eq } = require("drizzle-orm");

@@ -1,3 +1,4 @@
+// goal-api/controllers/ligasController.js
 const ligaModel = require("../models/ligaModel.js");
 
 async function getAllLigas(req, res) {
@@ -35,9 +36,7 @@ async function updateLiga(req, res) {
     if (updatedLiga.length === 0) {
       return res.status(404).json({ error: "Liga não encontrada" });
     }
-    return res
-      .status(200)
-      .json({ message: "Liga atualizada com sucesso", liga: updatedLiga[0] });
+    return res.status(200).json(updatedLiga[0]);
   } catch (error) {
     console.error("Erro ao atualizar liga:", error);
     return res.status(500).json({ error: "Erro interno do servidor" });
@@ -54,9 +53,7 @@ async function deleteLiga(req, res) {
     if (deletedLiga.length === 0) {
       return res.status(404).json({ error: "Liga não encontrada" });
     }
-    return res
-      .status(200)
-      .json({ message: "Liga excluída com sucesso", liga: deletedLiga[0] });
+    return res.status(200).json({ message: "Liga excluída com sucesso" });
   } catch (error) {
     console.error("Erro ao excluir liga:", error);
     return res.status(500).json({ error: "Erro interno do servidor" });
