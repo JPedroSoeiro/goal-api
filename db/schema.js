@@ -28,8 +28,7 @@ const users = pgTable("users", {
   name: varchar("name", { length: 256 }),
   email: varchar("email", { length: 256 }).notNull().unique(),
   password: text("password").notNull(),
-  // ADICIONE A COLUNA teamId AQUI
-  teamId: integer("team_id").references(() => teams.id),
+  teamId: integer("team_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

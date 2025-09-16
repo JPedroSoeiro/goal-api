@@ -15,33 +15,31 @@ async function loginUser(req, res) {
     const user = usersFound[0];
 
     if (!user) {
-      console.error("Usuário não encontrado para o email:", email);
       return res.status(401).json({ error: "Credenciais inválidas." });
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      console.error("Senha inválida");
       return res.status(401).json({ error: "Credenciais inválidas." });
     }
 
+    const userPayload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      teamId: user.teamId,
+    };
+
     const token = sign(
-      // CORREÇÃO: Adicionado 'teamId' ao payload do token JWT
-      { id: user.id, email: user.email, name: user.name, teamId: user.teamId },
+      userPayload,
       process.env.JWT_SECRET || "your-secret-key",
-      { expiresIn: "1h" }
+      { expiresIn: "8h" }
     );
 
     return res.status(200).json({
       message: "Login bem-sucedido!",
-      // CORREÇÃO: Adicionado 'teamId' ao objeto do usuário na resposta
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        teamId: user.teamId,
-      },
+      user: userPayload,
       token,
     });
   } catch (error) {

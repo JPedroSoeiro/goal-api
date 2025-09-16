@@ -45,19 +45,13 @@ async function createUser(req, res) {
 async function updateUser(req, res) {
   try {
     const id = req.params.id;
-    // Capture o teamId do corpo da requisição
     const { name, email, password, teamId } = req.body;
 
     if (!id) {
       return res.status(400).json({ error: "ID do usuário é obrigatório" });
     }
 
-    // Crie um objeto para os dados de atualização
-    let updateData = {};
-    if (name) updateData.name = name;
-    if (email) updateData.email = email;
-    if (teamId) updateData.teamId = teamId; // Adicione o teamId se ele existir
-
+    let updateData = { name, email, teamId };
     if (password) {
       updateData.password = await bcrypt.hash(password, 10);
     }
